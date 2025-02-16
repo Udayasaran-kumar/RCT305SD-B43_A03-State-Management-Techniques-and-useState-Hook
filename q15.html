@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Button with Dynamic Message</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div> 
+</body>
+</html>
+<script type="text/babel">
+function TodoList() {
+  const [tasks, setTasks] = React.useState([]);
+  const [task, setTask] = React.useState("");
+
+  function addTask() {
+    if (!task.trim()) {
+      alert("Task cannot be empty!");
+      return;
+    }
+    
+    setTasks([...tasks, { id: Date.now(), text: task, completed: false }]);
+    setTask("");
+  }
+
+  function toggleTaskCompletion(id) {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  }
+
+  function deleteTask(id) {
+    setTasks(tasks.filter(task => task.id !== id));
+  }
+
+  return (
+    <div style={{ maxWidth: "400px", margin: "20px auto", textAlign: "center" }}>
+      <h2>To-Do List</h2>
+      
+      <input 
+        type="text" 
+        placeholder="Enter task" 
+        value={task} 
+        onChange={(e) => setTask(e.target.value)}
+      />
+      <button onClick={addTask}>Add Task</button>
+
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {tasks.map(task => (
+          <li key={task.id} style={{ 
+            textDecoration: task.completed ? "line-through" : "none",
+            marginTop: "10px"
+          }}>
+            <span onClick={() => toggleTaskCompletion(task.id)} style={{ cursor: "pointer" }}>
+              {task.text}
+            </span>
+            <button onClick={() => deleteTask(task.id)} style={{ marginLeft: "10px" }}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<TodoList />);
+
+
+
+</script>
